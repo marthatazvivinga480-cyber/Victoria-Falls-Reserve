@@ -1,0 +1,37 @@
+{
+  "name": "victoria-falls-reserve",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "concurrently -k \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "lint": "eslint client/src server/src e2e playwright.config.ts",
+    "test": "npm run test --workspaces",
+    "seed": "npm run seed -w server",
+    "dev:demo": "npm run demo -w server",
+    "check": "npm run lint && npm run typecheck && npm test && npm run build",
+    "format": "prettier --write .",
+    "test:e2e": "npm run build && playwright test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "@playwright/test": "^1.64.0",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.22.0",
+    "prettier": "^3.9.10",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.26.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "config": {
+    "mongodbMemoryServer": {
+      "disablePostinstall": true
+    }
+  }
+}
