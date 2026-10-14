@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { z } from 'zod';
 const schema = z.object({
   PORT: z.coerce.number().default(4000),
+  SEED_ADMIN_PASSWORD: z.string().min(16).max(72).optional(),
   MONGODB_URI: z.string().min(1),
   CLIENT_ORIGIN: z.string().url(),
   JWT_ACCESS_SECRET: z.string().min(32),

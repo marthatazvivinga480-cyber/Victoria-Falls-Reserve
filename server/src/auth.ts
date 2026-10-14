@@ -21,16 +21,24 @@ export const cookieOptions = {
   path: '/api/auth',
 } as const;
 export async function issueTokens(id: string, res: Response) {
-  const refresh = jwt.sign({ sub: id, jti: crypto.randomUUID() }, env.JWT_REFRESH_SECRET, {
-    expiresIn: '7d',
-  });
+  const user = await User.findById(id);
+  if (!user) throw new AppError(401, 'Session expired');
+  const refresh = jwt.sign(
+    { sub: id, jti: crypto.randomUUID(), tokenVersion: user.tokenVersion ?? 0 },
+    env.JWT_REFRESH_SECRET,
+    {
+      expiresIn: '7d',
+    },
+  );
   await Refresh.create({
     user: id,
     hash: hash(refresh),
     expires: new Date(Date.now() + 7 * 86400000),
   });
   res.cookie('refresh', refresh, { ...cookieOptions, maxAge: 7 * 86400000 });
-  return jwt.sign({ sub: id }, env.JWT_ACCESS_SECRET, { expiresIn: '15m' });
+  return jwt.sign({ sub: id, tokenVersion: user.tokenVersion ?? 0 }, env.JWT_ACCESS_SECRET, {
+    expiresIn: '15m',
+  });
 }
 export const authenticate: RequestHandler = asyncRoute(async (req, _res, next) => {
   try {
@@ -39,7 +47,7 @@ export const authenticate: RequestHandler = asyncRoute(async (req, _res, next) =
     const payload = jwt.verify(token, env.JWT_ACCESS_SECRET);
     if (typeof payload === 'string' || !payload.sub) throw new Error();
     const user = await User.findById(payload.sub);
-    if (!user) throw new Error();
+    if (!user || (payload.tokenVersion ?? 0) !== (user.tokenVersion ?? 0)) throw new Error();
     req.auth = { id: user.id, role: user.role! };
     next();
   } catch {

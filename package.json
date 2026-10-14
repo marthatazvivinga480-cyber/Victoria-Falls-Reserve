@@ -15,7 +15,8 @@
     "dev:demo": "npm run demo -w server",
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "format": "prettier --write .",
-    "test:e2e": "npm run build && playwright test"
+    "test:e2e": "npm run build && playwright test",
+    "admin:password": "npm run admin:password -w server"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

@@ -4,6 +4,7 @@ const userSchema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true, select: false },
+    tokenVersion: { type: Number, default: 0 },
     role: { type: String, enum: ['Customer', 'Admin'], default: 'Customer' },
     favorites: [{ type: Schema.Types.ObjectId, ref: 'Hotel' }],
   },

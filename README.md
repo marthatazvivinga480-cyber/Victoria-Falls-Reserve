@@ -21,14 +21,14 @@ npm run dev -w client
 
 Open http://localhost:5173. Demo mode downloads a MongoDB binary on first use and starts a temporary replica set. It seeds the hotels and accounts automatically; data resets when stopped. It is a development helper, not a deployment mode.
 
-For a persistent database, copy `server/.env.example` to `server/.env`, configure MongoDB Atlas or a local replica set, code README.md
+For a persistent database, copy `server/.env.example` to `server/.env` and configure MongoDB Atlas or a local replica set. Before the first seed, add a unique private `SEED_ADMIN_PASSWORD` (16�72 characters) to that ignored file. Then run:
+
+```sh
 npm run seed
 npm run dev
-
+```
 
 The frontend proxy connects `/api` to port 4000. A client `.env` is optional locally. Stop demo mode before starting the persistent server, since both use port 4000. Seeding is additive/idempotent and never deletes existing data.
-
-## Demo accounts
 
 Seed only into a development/demo database. For a public deployment, replace the demo accounts/passwords before sharing it. Registration always creates Customers; no public admin registration or role-changing endpoint exists.
 
@@ -67,7 +67,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The browser tests start a seeded temporary API and preview the production frontend. They cover a real reservation, declined-payment retry, confirmation download, cancellation/refund, profile update, persisted session after reload, customer admin rejection, and admin navigation. They use a disposable database. Stop other local APIs before this run to ensure it uses the temporary database.
+The browser tests start a seeded temporary API and preview the production frontend. They cover a real reservation, declined-payment retry, confirmation download, cancellation/refund, profile update, persisted session after reload, customer admin rejection, and admin navigation. They use a disposable database on dedicated ports 14000 (API) and 15173 (frontend), and never reuse your running local API.
 
 ## Booking and payment model
 
@@ -143,3 +143,17 @@ All SVG illustrations are original project artwork stored locally. Replace them 
 Booking details include downloadable plain-text confirmation and print styling; the browser's Print → Save as PDF produces a PDF without a third-party service. Forms use labels, browser validation plus server Zod validation, keyboard focus indicators, live status/error messages, a skip link, responsive layouts, and visible empty states.
 
 See `VERIFICATION.md` for the checks executed on the packaged project.
+
+## Private administrator setup
+
+Normal seeding has no default admin password. Before creating an admin on a new database, set `SEED_ADMIN_PASSWORD` in `server/.env` to a unique private value of 16�72 characters. The account email is `admin@vfr.example`. Existing admin passwords are never overwritten by seeding.
+
+To replace an existing admin password, update that private environment variable and run:
+
+```sh
+npm run admin:password
+```
+
+This updates the bcrypt hash and revokes the admin's access/refresh sessions without changing customer accounts or bookings. Never commit this variable's actual value. Keep it in an ignored local `.env` or hosting environment settings.
+
+Temporary demo mode generates a separate random admin password and prints it in the local terminal. Automated tests use explicit fixture passwords only in disposable test databases. These fixtures are not used by normal seeding or a deployed server. The published customer demo password remains available for portfolio exploration.

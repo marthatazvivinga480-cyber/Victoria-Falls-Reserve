@@ -4,7 +4,7 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   timeout: 60000,
-  use: { baseURL: 'http://127.0.0.1:5173', trace: 'retain-on-failure' },
+  use: { baseURL: 'http://127.0.0.1:15173', trace: 'retain-on-failure' },
   projects: [
     {
       name: 'desktop',
@@ -28,15 +28,20 @@ export default defineConfig({
   webServer: [
     {
       command: 'npm run dev:demo',
-      url: 'http://127.0.0.1:4000/api/health',
+      url: 'http://127.0.0.1:14000/api/health',
       timeout: 1200000,
-      reuseExistingServer: !process.env.CI,
-      env: { CLIENT_ORIGIN: 'http://127.0.0.1:5173' },
+      reuseExistingServer: false,
+      env: {
+        CLIENT_ORIGIN: 'http://127.0.0.1:15173',
+        DEMO_ADMIN_PASSWORD: 'BrowserFixtureAdmin123!',
+        PORT: '14000',
+      },
     },
     {
-      command: 'npm run preview -w client -- --port 5173',
-      url: 'http://127.0.0.1:5173',
-      reuseExistingServer: !process.env.CI,
+      command: 'npm run preview -w client -- --port 15173',
+      env: { API_PROXY_TARGET: 'http://127.0.0.1:14000' },
+      url: 'http://127.0.0.1:15173',
+      reuseExistingServer: false,
       timeout: 60000,
     },
   ],

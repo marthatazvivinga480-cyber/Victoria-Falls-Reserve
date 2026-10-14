@@ -51,7 +51,7 @@ test('customer reserve, decline, retry, download, cancellation and admin managem
   await expect(page.getByRole('link', { name: 'Sign in', exact: true })).toBeVisible();
   await page.goto('/login');
   await page.getByLabel('Email address').fill('admin@vfr.example');
-  await page.getByLabel('Password').fill('ReserveDemo123!');
+  await page.getByLabel('Password').fill('BrowserFixtureAdmin123!');
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
   await expect(page).toHaveURL(/\/bookings$/);
   await page.goto('/admin');

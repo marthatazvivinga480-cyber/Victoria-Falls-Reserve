@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import { z } from 'zod';
 import { Hotel, Room, User } from './models.js';
 export const hotelNames = [
   'Zambezi Crest Hotel',
@@ -8,17 +9,34 @@ export const hotelNames = [
   'Rainforest Haven',
   'Sunset Gorge Retreat',
 ];
-export async function seedData() {
-  const password = await bcrypt.hash('ReserveDemo123!', 12);
-  for (const [email, name, role] of [
-    ['admin@vfr.example', 'Reserve Administrator', 'Admin'],
-    ['customer@vfr.example', 'Alex Traveller', 'Customer'],
-  ])
-    await User.updateOne(
-      { email },
-      { $setOnInsert: { email, name, role, password } },
-      { upsert: true },
-    );
+export async function seedData(options: { adminPassword?: string } = {}) {
+  const existingAdmin = await User.findOne({ email: 'admin@vfr.example' });
+  if (existingAdmin && existingAdmin.role !== 'Admin')
+    throw new Error('Admin seed email belongs to a non-admin account');
+  if (!existingAdmin) {
+    if (!options.adminPassword)
+      throw new Error('Set a private SEED_ADMIN_PASSWORD in server/.env before creating an admin');
+    const adminPassword = z.string().min(16).max(72).parse(options.adminPassword);
+    await User.create({
+      email: 'admin@vfr.example',
+      name: 'Reserve Administrator',
+      role: 'Admin',
+      password: await bcrypt.hash(adminPassword, 12),
+    });
+  }
+  const customerPassword = await bcrypt.hash('ReserveDemo123!', 12);
+  await User.updateOne(
+    { email: 'customer@vfr.example' },
+    {
+      $setOnInsert: {
+        email: 'customer@vfr.example',
+        name: 'Alex Traveller',
+        role: 'Customer',
+        password: customerPassword,
+      },
+    },
+    { upsert: true },
+  );
   for (const [i, name] of hotelNames.entries()) {
     let hotel = await Hotel.findOne({ name });
     if (!hotel)

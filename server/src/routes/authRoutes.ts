@@ -37,17 +37,20 @@ authRoutes.post(
     const token = req.cookies.refresh as string | undefined;
     if (!token) throw new AppError(401, 'Session expired');
     let subject: string;
+    let tokenVersion = 0;
     try {
       const payload = jwt.verify(token, env.JWT_REFRESH_SECRET);
       if (typeof payload === 'string' || !payload.sub) throw new Error();
       subject = payload.sub;
+      tokenVersion = typeof payload.tokenVersion === 'number' ? payload.tokenVersion : 0;
     } catch {
       throw new AppError(401, 'Session expired');
     }
     const old = await Refresh.findOneAndDelete({ hash: hash(token), expires: { $gt: new Date() } });
     if (!old || String(old.user) !== subject) throw new AppError(401, 'Session expired');
     const user = await User.findById(subject);
-    if (!user) throw new AppError(401, 'Session expired');
+    if (!user || (user.tokenVersion ?? 0) !== tokenVersion)
+      throw new AppError(401, 'Session expired');
     res.json({ user: publicUser(user), accessToken: await issueTokens(user.id, res) });
   }),
 );

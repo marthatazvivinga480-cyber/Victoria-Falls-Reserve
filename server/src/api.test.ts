@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from './app.js';
 import { seedData } from './seed-data.js';
+import { setAdminPassword } from './services/admin-password.js';
 import { Room, Booking, Review, Payment, User } from './models.js';
 let mongo: MongoMemoryReplSet;
 let customer: string;
@@ -14,7 +15,7 @@ let booking: string;
 beforeAll(async () => {
   mongo = await MongoMemoryReplSet.create({ replSet: { count: 1 } });
   await mongoose.connect(mongo.getUri());
-  await seedData();
+  await seedData({ adminPassword: 'LocalFixtureAdmin123!' });
   await Promise.all([Booking.init(), Review.init(), User.init()]);
   const r = await Room.findOne();
   room = r!.id;
@@ -28,7 +29,7 @@ beforeAll(async () => {
   admin = (
     await request(app)
       .post('/api/auth/login')
-      .send({ email: 'admin@vfr.example', password: 'ReserveDemo123!' })
+      .send({ email: 'admin@vfr.example', password: 'LocalFixtureAdmin123!' })
   ).body.accessToken;
 });
 afterAll(async () => {
@@ -345,5 +346,39 @@ describe('API integration', () => {
     ).toBeGreaterThan(200);
     for (const path of ['rooms', 'bookings', 'customers', 'reviews', 'payments'])
       expect((await request(app).get(`/api/admin/${path}`).set(auth(admin))).status).toBe(200);
+  });
+  it('revokes old admin password, access tokens and refresh sessions after a reset', async () => {
+    const agent = request.agent(app);
+    const login = await agent
+      .post('/api/auth/login')
+      .send({ email: 'admin@vfr.example', password: 'LocalFixtureAdmin123!' });
+    expect(login.status).toBe(200);
+    await setAdminPassword('admin@vfr.example', 'NewPrivateAdmin456!');
+    expect(
+      (await request(app).get('/api/admin/hotels').set(auth(login.body.accessToken))).status,
+    ).toBe(401);
+    expect((await agent.post('/api/auth/refresh')).status).toBe(401);
+    expect(
+      (
+        await request(app)
+          .post('/api/auth/login')
+          .send({ email: 'admin@vfr.example', password: 'LocalFixtureAdmin123!' })
+      ).status,
+    ).toBe(401);
+    expect(
+      (
+        await request(app)
+          .post('/api/auth/login')
+          .send({ email: 'admin@vfr.example', password: 'NewPrivateAdmin456!' })
+      ).status,
+    ).toBe(200);
+    await seedData({ adminPassword: 'LocalFixtureAdmin123!' });
+    expect(
+      (
+        await request(app)
+          .post('/api/auth/login')
+          .send({ email: 'admin@vfr.example', password: 'NewPrivateAdmin456!' })
+      ).status,
+    ).toBe(200);
   });
 });
