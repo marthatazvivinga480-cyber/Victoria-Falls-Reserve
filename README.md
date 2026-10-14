@@ -21,21 +21,14 @@ npm run dev -w client
 
 Open http://localhost:5173. Demo mode downloads a MongoDB binary on first use and starts a temporary replica set. It seeds the hotels and accounts automatically; data resets when stopped. It is a development helper, not a deployment mode.
 
-For a persistent database, copy `server/.env.example` to `server/.env`, configure MongoDB Atlas or a local replica set, then:
-
-```sh
+For a persistent database, copy `server/.env.example` to `server/.env`, configure MongoDB Atlas or a local replica set, code README.md
 npm run seed
 npm run dev
-```
+
 
 The frontend proxy connects `/api` to port 4000. A client `.env` is optional locally. Stop demo mode before starting the persistent server, since both use port 4000. Seeding is additive/idempotent and never deletes existing data.
 
 ## Demo accounts
-
-| Role     | Email                | Password        |
-| -------- | -------------------- | --------------- |
-| Customer | customer@vfr.example | ReserveDemo123! |
-| Admin    | admin@vfr.example    | ReserveDemo123! |
 
 Seed only into a development/demo database. For a public deployment, replace the demo accounts/passwords before sharing it. Registration always creates Customers; no public admin registration or role-changing endpoint exists.
 
