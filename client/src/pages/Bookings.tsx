@@ -19,7 +19,7 @@ export function BookingList() {
       <p className="eyebrow">YOUR RESERVE JOURNEY</p>
       <div className="section-heading">
         <h1>Your stays.</h1>
-        <Link to="/hotels">Plan another escape ↗</Link>
+        <Link to="/hotels">Find another stay ↗</Link>
       </div>
       <div className="tabs" role="tablist" aria-label="Booking category">
         {['upcoming', 'past', 'cancelled'].map((t) => (
@@ -61,7 +61,7 @@ export function BookingList() {
       ) : (
         !resource.loading && (
           <Notice>
-            No {tab} stays yet. <Link to="/hotels">Find your next escape</Link>.
+            No {tab} stays yet. <Link to="/hotels">Browse available stays</Link>.
           </Notice>
         )
       )}
@@ -131,7 +131,7 @@ export function Checkout() {
           </div>
           <label>
             Simulation outcome
-            <select name="outcome">
+            <select name="outcome" className="payment-outcome">
               <option value="success">Successful payment</option>
               <option value="failure">Declined payment</option>
             </select>
@@ -222,7 +222,7 @@ export function BookingDetails() {
     }
   }
   function download(booking: Booking) {
-    const content = `VICTORIA FALLS RESERVE\nDiscover Victoria Falls. Stay Exceptionally.\n\nReservation: ${booking._id}\nHotel: ${booking.hotel?.name}\nRoom: ${booking.room?.name}\nCheck-in: ${booking.checkIn}, 14:00 (Zimbabwe UTC+02:00)\nCheck-out: ${booking.checkOut}, 10:00\nGuests: ${booking.guests}\nNights: ${booking.nights}\nTotal: ${money(booking.total)}\nStatus: ${booking.status}\nPayment: ${booking.paymentStatus} (SIMULATED - no real money)\nRefund: ${money(booking.refunded)}\nFree cancellation until 48 hours before check-in; otherwise first night. No-show non-refundable.\nFictional hotels - student portfolio demo.`;
+    const content = `VICTORIA FALLS RESERVE\nFind a room for your visit to Victoria Falls.\n\nReservation: ${booking._id}\nHotel: ${booking.hotel?.name}\nRoom: ${booking.room?.name}\nCheck-in: ${booking.checkIn}, 14:00 (Zimbabwe UTC+02:00)\nCheck-out: ${booking.checkOut}, 10:00\nGuests: ${booking.guests}\nNights: ${booking.nights}\nTotal: ${money(booking.total)}\nStatus: ${booking.status}\nPayment: ${booking.paymentStatus} (SIMULATED - no real money)\nRefund: ${money(booking.refunded)}\nFree cancellation until 48 hours before check-in; otherwise first night. No-show non-refundable.\nDemo hotel listings - student portfolio project.`;
     const url = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
     const a = document.createElement('a');
     a.href = url;
@@ -245,7 +245,7 @@ export function BookingDetails() {
         {booking.status === 'confirmed' ? 'YOUR ESCAPE IS RESERVED' : 'YOUR RESERVATION'}
       </p>
       <h1>
-        {booking.status === 'confirmed' ? 'We’ll see you at the Falls.' : 'Your stay, at a glance.'}
+        {booking.status === 'confirmed' ? 'Your booking is confirmed.' : 'Your booking details.'}
       </h1>
       {message && <Notice>{message}</Notice>}
       {error && <Notice error>{error}</Notice>}

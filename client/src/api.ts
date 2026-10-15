@@ -24,7 +24,12 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     },
   });
   if (response.status === 204) return undefined as T;
-  const data = await response.json();
+  const data: { error?: { message?: string } } = await response.json().catch(() => {
+    throw new ApiError(
+      response.ok ? 502 : response.status,
+      'The booking server is unavailable or returned an invalid response. Wait for the backend to start, then try again.',
+    );
+  });
   if (!response.ok) throw new ApiError(response.status, data.error?.message || 'Request failed');
   return data as T;
 }

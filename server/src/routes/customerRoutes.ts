@@ -56,7 +56,12 @@ customerRoutes.get(
   route(async (req, res) => {
     const query = z
       .object({
-        q: z.string().max(80).optional(),
+        q: z
+          .string()
+          .trim()
+          .max(80)
+          .transform((value) => value.replace(/\s+/g, ' '))
+          .optional(),
         amenity: z.string().max(50).optional(),
         minPrice: z.coerce.number().min(0).optional(),
         maxPrice: z.coerce.number().min(0).optional(),

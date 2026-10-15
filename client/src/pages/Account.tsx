@@ -40,19 +40,22 @@ export function Login({ register = false }: { register?: boolean }) {
   return (
     <section className="auth-layout">
       <div className="auth-picture">
-        <img src="/images/destinations/gorge.svg" alt="Sunset landscape illustration" />
+        <img
+          src="/images/destinations/victoria-falls-rainbow.jpg"
+          alt="Victoria Falls with a rainbow"
+        />
         <h2>
-          Your next chapter
+          Your plans,
           <br />
-          begins here.
+          all in one place.
         </h2>
       </div>
       <div className="auth-form">
         <p className="eyebrow">WELCOME TO THE RESERVE</p>
-        <h1>{register ? 'Make yourself at home.' : 'Welcome back.'}</h1>
+        <h1>{register ? 'Create your account.' : 'Welcome back.'}</h1>
         <p>
           {register
-            ? 'Create your account and start your escape.'
+            ? 'Save hotels, book a room, and manage your reservations.'
             : 'Sign in to manage your stays and saved places.'}
         </p>
         <form onSubmit={(e) => void submit(e)}>

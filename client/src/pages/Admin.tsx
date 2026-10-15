@@ -7,7 +7,7 @@ export function Admin() {
   return (
     <section className="section admin">
       <p className="eyebrow">RESERVE MANAGEMENT</p>
-      <h1>A thoughtful overview.</h1>
+      <h1>Manage the reserve.</h1>
       <nav className="admin-nav" aria-label="Administration">
         {[
           ['', 'Overview'],
@@ -64,12 +64,21 @@ function Overview() {
             ))}
           </div>
           <div className="panel mt">
-            <h2>Reservation activity</h2>
+            <h2 className="admin-activity-heading">Reservation activity</h2>
             <div className="status-bars">
               {resource.data.statuses.map((s) => (
                 <div className="row" key={s._id}>
                   <span>{s._id.replace('_', ' ')}</span>
-                  <meter min="0" max={Math.max(1, resource.data!.bookings)} value={s.count} />
+                  <div
+  className="activity-track" style={{ display: 'block', width: '100%', minWidth: 0, height: 10, backgroundColor: '#e1e7df', borderRadius: 3, overflow: 'hidden' }}
+  role="meter"
+  aria-label={`${s._id.replace('_', ' ')} reservations`}
+  aria-valuemin={0}
+  aria-valuemax={Math.max(1, resource.data!.bookings)}
+  aria-valuenow={s.count}
+>
+  <span className="activity-fill" style={{ display: 'block', height: 10, backgroundColor: '#456456', width: `${Math.min(100, Math.max(0, s.count / Math.max(1, resource.data!.bookings) * 100))}%` }} />
+</div>
                   <strong>{s.count}</strong>
                 </div>
               ))}

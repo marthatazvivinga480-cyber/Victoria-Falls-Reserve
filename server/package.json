@@ -10,7 +10,8 @@
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --configLoader runner",
-    "admin:password": "npm run build && node dist/admin-password.js"
+    "admin:password": "npm run build && node dist/admin-password.js",
+    "images:sync": "npm run build && node dist/sync-images.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

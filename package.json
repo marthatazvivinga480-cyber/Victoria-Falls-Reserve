@@ -16,7 +16,8 @@
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
     "format": "prettier --write .",
     "test:e2e": "npm run build && playwright test",
-    "admin:password": "npm run admin:password -w server"
+    "admin:password": "npm run admin:password -w server",
+    "images:sync": "npm run images:sync -w server"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { Hotel, Room, User } from './models.js';
+import { hotelPhotos, roomPhotos } from './photo-manifest.js';
 export const hotelNames = [
   'Zambezi Crest Hotel',
   'Mosi River Lodge',
@@ -58,7 +59,7 @@ export async function seedData(options: { adminPassword?: string } = {}) {
           'Rainforest district',
           'Batoka gorge',
         ][i],
-        image: `/images/hotels/hotel-${i + 1}.svg`,
+        image: hotelPhotos[name],
         amenities: ['Wi-Fi', 'Breakfast', 'Pool', ...(i % 2 === 0 ? ['Spa'] : ['River views'])],
         featured: i < 3,
       });
@@ -74,7 +75,7 @@ export async function seedData(options: { adminPassword?: string } = {}) {
               'A spacious suite with a lounge and views of the river.',
               'Room to reconnect, with two bedrooms and a shared terrace.',
             ][j],
-            image: `/images/rooms/room-${j + 1}.svg`,
+            image: roomPhotos[name][roomName],
             capacity: j === 2 ? 4 : 2,
             price: 120 + i * 25 + j * 65,
             units: 3,

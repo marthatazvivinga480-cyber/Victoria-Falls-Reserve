@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Link, NavLink, Navigate, useLocation } from 'react-router-dom';
 import { api } from './api';
 import { useAuth } from './auth';
 export const money = (amount: number) =>
@@ -49,7 +49,7 @@ export function ResourceState({
   error: string;
   retry: () => void;
 }) {
-  if (loading) return <Notice>Preparing your escape…</Notice>;
+  if (loading) return <Notice>Loading your stays…</Notice>;
   if (error)
     return (
       <Notice error>
@@ -74,6 +74,9 @@ export function Protected({ children, admin = false }: { children: ReactNode; ad
 }
 export function Layout({ children }: { children: ReactNode }) {
   const { user, signOut } = useAuth();
+  const [accountOpen, setAccountOpen] = useState(false);
+  const location = useLocation();
+  useEffect(() => setAccountOpen(false), [location.pathname]);
   const [error, setError] = useState('');
   return (
     <>
@@ -81,29 +84,55 @@ export function Layout({ children }: { children: ReactNode }) {
         Skip to content
       </a>
       <header className="header">
-        <Link to="/" className="brand">
-          <img src="/images/branding/logo.svg" alt="" />
-          <span>
-            VICTORIA FALLS<small>RESERVE</small>
-          </span>
+        <Link to="/" className="brand brand-image" aria-label="Victoria Falls Reserve home">
+          <img src="/images/victoria-falls-reserve-logo.png" alt="Victoria Falls Reserve" />
         </Link>
         <nav aria-label="Main navigation">
-          <Link to="/hotels">Find a stay</Link>
+          <NavLink to="/" end>
+            Home
+          </NavLink>
+          <NavLink to="/about">About</NavLink>
+          <NavLink to="/hotels">Find a stay</NavLink>
           {user ? (
-            <>
-              <Link to="/bookings">My bookings</Link>
-              <Link to="/favorites">Saved</Link>
-              <Link to="/profile">{user.name.split(' ')[0]}</Link>
-              {user.role === 'Admin' && <Link to="/admin">Admin</Link>}
+            <div
+              className="account-menu"
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) setAccountOpen(false);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === 'Escape') {
+                  setAccountOpen(false);
+                  event.currentTarget.querySelector('button')?.focus();
+                }
+              }}
+            >
               <button
-                className="text-button"
-                onClick={() => {
-                  void signOut().catch((e) => setError(e.message));
-                }}
+                className="account-toggle"
+                aria-expanded={accountOpen}
+                aria-controls="account-links"
+                onClick={() => setAccountOpen(!accountOpen)}
               >
-                Sign out
+                My account <span aria-hidden="true">⌄</span>
               </button>
-            </>
+              {accountOpen && (
+                <div id="account-links" className="account-links">
+                  <span className="account-name">{user.name}</span>
+                  <NavLink to="/bookings">My bookings</NavLink>
+                  <NavLink to="/favorites">Saved stays</NavLink>
+                  <NavLink to="/profile">Profile</NavLink>
+                  {user.role === 'Admin' && <NavLink to="/admin">Admin dashboard</NavLink>}
+                  <button
+                    className="text-button"
+                    onClick={() => {
+                      setAccountOpen(false);
+                      void signOut().catch((e) => setError(e.message));
+                    }}
+                  >
+                    Sign out
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <Link to="/login" className="button small">
               Sign in
@@ -116,21 +145,24 @@ export function Layout({ children }: { children: ReactNode }) {
       <footer>
         <div className="footer-grid">
           <div>
-            <h2>
-              Stay close to
-              <br />
-              something extraordinary.
-            </h2>
-            <p>Discover Victoria Falls. Stay Exceptionally.</p>
+            <h2>Find a stay. Make it yours.</h2>
           </div>
           <div>
-            <p>Thoughtfully chosen. Warmly welcomed.</p>
-            <Link to="/hotels">Explore our collection →</Link>
-            <p>Student portfolio • Fictional hotels • Simulated payments</p>
+            <h3 className="footer-heading">Quick links</h3>
+            <nav aria-label="Footer navigation" className="footer-nav">
+              <Link to="/about">About</Link>
+              <Link to="/hotels">Find a stay</Link>
+              {user && <Link to="/bookings">My bookings</Link>}
+            </nav>
           </div>
         </div>
         <div className="footer-bottom">
-          © {new Date().getFullYear()} Victoria Falls Reserve{' '}
+          <div>
+            <span>© {new Date().getFullYear()} Victoria Falls Reserve</span>
+            <p className="footer-disclosure">
+              Student portfolio · Demo hotel listings · Simulated payments
+            </p>
+          </div>
           <span>Victoria Falls, Zimbabwe · USD pricing</span>
         </div>
       </footer>

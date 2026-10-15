@@ -18,7 +18,10 @@ export function SearchForm({ compact = false }: { compact?: boolean }) {
     e.preventDefault();
     const values = new FormData(e.currentTarget);
     const query = new URLSearchParams();
-    for (const [key, value] of values) if (value) query.set(key, String(value));
+    for (const [key, value] of values) {
+      const cleaned = String(value).trim().replace(/\s+/g, ' ');
+      if (cleaned) query.set(key, cleaned);
+    }
     navigate(`/hotels?${query}`);
   }
   return (
@@ -43,7 +46,7 @@ export function SearchForm({ compact = false }: { compact?: boolean }) {
       </label>
       <label>
         Guests
-        <select name="guests" defaultValue={params.get('guests') || '2'}>
+        <select className="search-dropdown" name="guests" defaultValue={params.get('guests') || '2'}>
           {[1, 2, 3, 4, 5, 6].map((n) => (
             <option key={n}>{n}</option>
           ))}
@@ -67,7 +70,7 @@ export function SearchForm({ compact = false }: { compact?: boolean }) {
           </label>
           <label>
             Amenities
-            <select name="amenity" defaultValue={params.get('amenity') || ''}>
+            <select className="search-dropdown" name="amenity" defaultValue={params.get('amenity') || ''}>
               <option value="">All amenities</option>
               {['Pool', 'Spa', 'Breakfast', 'River views', 'Wi-Fi'].map((a) => (
                 <option key={a}>{a}</option>
@@ -87,7 +90,7 @@ export function HotelCard({ hotel, query = '' }: { hotel: Hotel; query?: string 
     <article className="hotel-card">
       <Link to={`/hotels/${hotel._id}${query}`}>
         <div className="image-wrap">
-          <img src={hotel.image} alt={`${hotel.name} property illustration`} loading="lazy" />
+          <img src={hotel.image} alt={`${hotel.name} illustrative property photo`} loading="lazy" />
           {hotel.featured && <span className="image-tag">RESERVE COLLECTION</span>}
         </div>
         <div className="card-copy">
@@ -112,17 +115,17 @@ export function Home() {
       <section className="hero">
         <img
           className="hero-image"
-          src="/images/destinations/victoria-falls.svg"
-          alt="Illustrated landscape of Victoria Falls and the Zambezi gorge"
+          src="/images/destinations/hero.jpg"
+          alt="Victoria Falls waterfall"
         />
         <div className="hero-copy">
-          <p className="eyebrow">A WORLD OF WONDER. A PLACE TO BELONG.</p>
+          <p className="eyebrow">VICTORIA FALLS, ZIMBABWE</p>
           <h1>
-            Where the river
+            Your visit starts
             <br />
-            meets the remarkable.
+            with a place to stay.
           </h1>
-          <p>Discover Victoria Falls. Stay Exceptionally.</p>
+          <p>Find a room for your visit to Victoria Falls.</p>
           <Link className="button light" to="/hotels">
             Explore the collection ↗
           </Link>
@@ -135,10 +138,11 @@ export function Home() {
         <SearchForm />
       </div>
       <section className="section intro">
-        <p className="eyebrow">THE RESERVE WAY</p>
+        <p className="eyebrow">STAYS FOR DIFFERENT PLANS</p>
         <h2>
-          Extraordinary places.
-          <br />A more considered stay.
+          By the river. Near the Falls.
+          <br />
+          Somewhere to settle in.
         </h2>
         <p>
           From riverfront mornings to golden evenings above the gorge, discover six distinctive
@@ -149,7 +153,7 @@ export function Home() {
       <section className="section">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">HANDPICKED FOR YOUR ESCAPE</p>
+            <p className="eyebrow">EXPLORE THE HOTELS</p>
             <h2>Our collection of stays</h2>
           </div>
           <Link to="/hotels">View all stays ↗</Link>
@@ -162,7 +166,7 @@ export function Home() {
         </div>
       </section>
       <section className="destination-strip">
-        <img src="/images/destinations/gorge.svg" alt="Illustrated sunset over Batoka gorge" />
+        <img src="/images/destinations/river-sunset.jpg" alt="Sunset over a river" />
         <div>
           <p className="eyebrow">BEYOND YOUR ROOM</p>
           <h2>
@@ -172,7 +176,7 @@ export function Home() {
           </h2>
           <p>
             The Falls are only the beginning. Discover rainforest paths, quiet riverbanks, local
-            craft, and sunsets that ask you to stay a little longer.
+            craft, and evenings by the water.
           </p>
           <Link to="/hotels" className="button">
             Find your base ↗
@@ -184,14 +188,18 @@ export function Home() {
           [
             '01',
             'Six distinct retreats',
-            'Small details. Memorable places. A stay that feels like you.',
+            'Compare six hotel listings, their rooms, and their amenities.',
           ],
           [
             '02',
-            'Clear, considered booking',
-            'Transparent nightly prices and a simple reservation journey.',
+            'Know the cost before you book',
+            'See nightly rates, your total, and cancellation terms before checkout.',
           ],
-          ['03', 'Room to explore', 'One destination, endless ways to experience it.'],
+          [
+            '03',
+            'Keep your plans together',
+            'Save hotels and return to your reservations from your account.',
+          ],
         ].map(([n, title, text]) => (
           <div key={n}>
             <span className="eyebrow">{n}</span>
@@ -209,15 +217,18 @@ export function Hotels() {
   return (
     <section className="section">
       <p className="eyebrow">FIND YOUR PLACE</p>
-      <h1>Stay exceptionally.</h1>
+      <h1>Find your stay.</h1>
       <p className="lead">Six distinctive addresses. One extraordinary destination.</p>
-      <SearchForm compact />
+      <SearchForm key={params.toString()} compact />
       <ResourceState {...resource} retry={resource.reload} />
       {resource.data && !resource.loading && (
         <>
           <p className="results-count">{resource.data.length} stays found · Prices in USD</p>
           {resource.data.length === 0 ? (
-            <Notice>No stays match these dates and filters. Try another date or budget.</Notice>
+            <Notice>
+              No stays match your search. Check the hotel name or try fewer filters.{' '}
+              <Link to="/hotels">Clear filters and show all stays</Link>
+            </Notice>
           ) : (
             <div className="hotel-grid">
               {resource.data.map((h) => (
@@ -285,10 +296,22 @@ export function HotelDetails() {
       </section>
     );
   const hotel = resource.data!;
+  const budgetValue = params.get('maxPrice');
+  const parsedBudget = budgetValue?.trim() ? Number(budgetValue) : NaN;
+  const maxPrice = Number.isFinite(parsedBudget) && parsedBudget >= 0 ? parsedBudget : undefined;
+  const rooms = hotel.rooms?.filter((room) => maxPrice === undefined || room.price <= maxPrice) ?? [];
+  const allRoomsQuery = new URLSearchParams(params);
+  allRoomsQuery.delete('maxPrice');
+  allRoomsQuery.set('checkIn', checkIn);
+  allRoomsQuery.set('checkOut', checkOut);
+  allRoomsQuery.set('guests', String(guests));
+  const changeBudgetQuery = new URLSearchParams(allRoomsQuery);
+  changeBudgetQuery.set('q', hotel.name);
+  if (maxPrice !== undefined) changeBudgetQuery.set('maxPrice', String(maxPrice));
   return (
     <>
       <section className="detail-cover">
-        <img src={hotel.image} alt={`${hotel.name} property illustration`} />
+        <img src={hotel.image} alt={`${hotel.name} illustrative property photo`} />
         <div>
           <p className="eyebrow">{hotel.location}</p>
           <h1>{hotel.name}</h1>
@@ -307,7 +330,7 @@ export function HotelDetails() {
             </div>
           </div>
           <aside className="panel">
-            <h3>A considered stay</h3>
+            <h3>Before you book</h3>
             <p>Check-in from 14:00 · Check-out by 10:00</p>
             <p>1–30 nights · Same-day stays welcome</p>
             <p>
@@ -357,10 +380,23 @@ export function HotelDetails() {
           </label>
         </div>
         {error && <Notice error>{error}</Notice>}
+        {maxPrice !== undefined && (
+          <p className="results-count">
+            Showing rooms up to {money(maxPrice)} per night.{' '}
+            <Link to={`/hotels/${id}?${allRoomsQuery}`}>Show all room prices</Link>
+          </p>
+        )}
+        {maxPrice !== undefined && rooms.length === 0 && (
+                    <Notice>
+            No rooms match your budget of {money(maxPrice!)} per night.{' '}
+            <Link to={`/hotels?${changeBudgetQuery}`}>Change budget</Link>{' · '}
+            <Link to={`/hotels/${id}?${allRoomsQuery}`}>Show all room prices</Link>
+          </Notice>
+        )}
         <div className="room-list">
-          {hotel.rooms?.map((room) => (
+          {rooms.map((room) => (
             <article className="room-card" key={room._id}>
-              <img src={room.image} alt={`${room.name} illustration`} />
+              <img src={room.image} alt={`${room.name} illustrative room photo`} />
               <div>
                 <h3>{room.name}</h3>
                 <p>{room.description}</p>
@@ -384,7 +420,7 @@ export function HotelDetails() {
             </article>
           ))}
         </div>
-        <h2 className="mt">Guest reflections</h2>
+        <h2 className="mt">Guest reviews</h2>
         {!hotel.reviews?.length ? (
           <Notice>No reviews yet. Your completed stay could be the first.</Notice>
         ) : (

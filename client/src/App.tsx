@@ -5,6 +5,7 @@ import { Home, Hotels, HotelDetails } from './pages/Explore';
 import { Login, Profile, Favorites } from './pages/Account';
 import { BookingList, BookingDetails, Checkout } from './pages/Bookings';
 import { Admin } from './pages/Admin';
+import { About } from './pages/About';
 export function App() {
   const location = useLocation();
   useEffect(() => {
@@ -14,6 +15,7 @@ export function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
         <Route path="/hotels" element={<Hotels />} />
         <Route path="/hotels/:id" element={<HotelDetails />} />
         <Route path="/login" element={<Login />} />

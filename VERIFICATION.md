@@ -23,6 +23,10 @@ The ZIP contains source, configuration, a pinned dependency lockfile, tests, ori
 
 To reproduce the checks, follow `README.md`. Browser tests additionally require a Playwright Chromium installation, or set `PLAYWRIGHT_EXECUTABLE_PATH` to a compatible installed browser executable. Database tests/demo mode download MongoDB on first run; subsequent runs reuse the project cache.
 
-## Administrator credential update — 14 October 2026
+## Administrator credential update ï¿½ 14 October 2026
 
 Normal seeding no longer creates an admin with a published default password. Admin passwords come from a private local/hosting environment variable. The reset service changes the bcrypt hash, increments the account token version, and deletes refresh sessions. Regression tests verify rejection of the previous password, access token, and refresh session; new-password login succeeds and repeat seeding preserves the new password. Both desktop and mobile browser journeys passed against a disposable database on dedicated test ports. The actual Atlas administrator password was rotated and verified without printing the new secret.
+
+## Local photo integration â€” 14 October 2026
+
+29 unique downloaded JPEG photos were organized and sized for web use. Image-only synchronization updated six hotel records and eighteen room categories in Atlas without changing accounts, booking data or rates. All mapped file paths exist. The live homepage was inspected with the new Falls hero, hotel cards and sunset image. Lint, type checking, thirteen client tests, nineteen server tests, and both builds passed. Original download files remain untouched.

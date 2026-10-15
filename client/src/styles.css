@@ -425,34 +425,48 @@ strong {
 footer {
   background: #28382f;
   color: #ecf0e8;
-  padding: 55px 6% 20px;
+  padding: 32px 6% 18px;
 }
 footer h2 {
-  font-size: 35px;
+  font-size: 24px;
+  line-height: 1.3;
+  margin: 0 0 10px;
+  max-width: 460px;
 }
 .footer-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 32px;
+  align-items: start;
 }
-.footer-grid > div:last-child {
-  justify-self: end;
-  font-size: 13px;
-  align-self: center;
+.footer-description {
+  margin: 0;
+  font-size: 14px;
 }
-.footer-grid > div:last-child p:last-child {
-  color: #aebbaf;
-  font-size: 11px;
-  margin-top: 30px;
+.footer-disclosure {
+  color: #c4cec4;
+  font-size: 12px;
+  margin: 14px 0 0;
+  line-height: 1.6;
+}
+.footer-heading {
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+  color: #c4cec4;
 }
 .footer-bottom {
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
   justify-content: space-between;
   border-top: 1px solid #59695e;
-  padding-top: 20px;
-  margin-top: 25px;
-  color: #bbc8ba;
-  font-size: 11px;
+  padding-top: 14px;
+  margin-top: 24px;
+  color: #c4cec4;
+  font-size: 12px;
 }
 .notice {
   padding: 18px 22px;
@@ -1086,4 +1100,452 @@ meter {
   h1 {
     font-size: 30px;
   }
+}
+
+.about-intro {
+  max-width: 760px;
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+.about-photo {
+  width: 100%;
+  height: clamp(220px, 35vw, 420px);
+  object-fit: cover;
+  margin: 28px 0 48px;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px;
+  margin-bottom: 44px;
+}
+.about-grid article {
+  padding: 28px;
+  background: #fff;
+  border: 1px solid #dce2d8;
+}
+.about-grid p {
+  line-height: 1.8;
+}
+.about-values {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.about-page .notice h2 {
+  margin-top: 0;
+}
+@media (max-width: 760px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin: 0;
+  font-size: 14px;
+}
+.footer-nav a {
+  text-decoration: none;
+}
+.footer-nav a:hover {
+  text-decoration: underline;
+}
+
+.about-story {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-bottom: 64px;
+}
+.about-story h1 {
+  font-size: clamp(38px, 4vw, 58px);
+  line-height: 1.12;
+}
+.about-story p {
+  line-height: 1.8;
+}
+.about-story figure {
+  margin: 0;
+}
+.about-story img {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+}
+.about-story figcaption {
+  font-size: 12px;
+  color: #536758;
+  margin-top: 12px;
+  line-height: 1.6;
+}
+.about-purpose {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  padding: 40px 0;
+  border-top: 1px solid #d3dbd1;
+  border-bottom: 1px solid #d3dbd1;
+}
+.about-purpose h2,
+.about-project h2,
+.about-cta h2 {
+  font-size: 32px;
+}
+.about-purpose p,
+.about-values p,
+.about-project p {
+  line-height: 1.8;
+}
+.about-principles {
+  padding: 48px 0;
+}
+.about-values {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 36px;
+}
+.about-values article {
+  border-top: 2px solid #466354;
+  padding-top: 18px;
+}
+.about-values h3 {
+  font-size: 25px;
+  margin-top: 0;
+}
+.about-project {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 60px;
+  padding: 36px 0;
+  border-top: 1px solid #d3dbd1;
+}
+.about-cta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 28px;
+  padding: 32px;
+  margin-top: 24px;
+  background: #e8eee8;
+}
+.about-cta h2 {
+  margin: 8px 0;
+}
+.about-cta p:last-child {
+  margin-bottom: 0;
+}
+.about-cta .button {
+  flex-shrink: 0;
+}
+@media (max-width: 760px) {
+  .about-story,
+  .about-purpose,
+  .about-values,
+  .about-project {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .about-story {
+    margin-bottom: 36px;
+  }
+  .about-story img {
+    height: 360px;
+  }
+  .about-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
+  }
+}
+
+.header nav > a.active {
+  text-decoration: underline;
+  text-underline-offset: 8px;
+  text-decoration-thickness: 2px;
+}
+.account-menu {
+  position: relative;
+}
+.account-toggle {
+  background: transparent;
+  color: #28382f;
+  border: 1px solid #ced2cc;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+.account-links {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: 220px;
+  padding: 12px;
+  background: #fffefb;
+  border: 1px solid #d3dbd1;
+  box-shadow: 0 12px 30px #28382f20;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 10;
+}
+.account-name {
+  padding: 8px 10px 12px;
+  font-size: 12px;
+  color: #536758;
+  white-space: normal;
+  border-bottom: 1px solid #e1e4dd;
+}
+.account-links a,
+.account-links button.text-button {
+  padding: 10px;
+  text-align: left;
+  font-size: 14px;
+}
+.account-links a:hover,
+.account-links a.active,
+.account-links button:hover {
+  background: #e8eee8;
+}
+.footer-bottom {
+  font-size: 13px;
+  align-items: start;
+}
+.footer-bottom .footer-disclosure {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
+@media (max-width: 650px) {
+  .header nav {
+    overflow: visible;
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+  .account-links {
+    right: 0;
+    width: min(220px, 85vw);
+  }
+}
+
+.brand.brand-image {
+  display: block;
+  line-height: 0;
+  flex-shrink: 0;
+}
+.brand.brand-image img {
+  width: 270px;
+  height: 86px;
+  object-fit: contain;
+  display: block;
+}
+@media (max-width: 650px) {
+  .brand.brand-image img {
+    width: 220px;
+    height: 70px;
+  }
+}
+
+/* Keep native selection behaviour; only this field uses the custom palette. */
+.payment-outcome {
+  color: #28382f;
+  background-color: #fffefb;
+  border-color: #456456;
+  accent-color: #456456;
+}
+.payment-outcome option {
+  color: #28382f;
+  background-color: #f7f5ef;
+}
+@supports (appearance: base-select) {
+  .payment-outcome,
+  .payment-outcome::picker(select) { appearance: base-select; }
+  .payment-outcome::picker(select) {
+    background: #f7f5ef;
+    color: #28382f;
+    border: 1px solid #456456;
+    border-radius: 3px;
+    top: anchor(bottom);
+    bottom: auto;
+    margin-top: 2px;
+    position-area: bottom span-right;
+    position-try-fallbacks: none;
+  }
+  .payment-outcome option {
+    padding: 8px 12px;
+    background: #f7f5ef;
+    color: #28382f;
+  }
+  .payment-outcome option:hover,
+  .payment-outcome:not(:has(option:hover)) option:focus {
+    background: #456456;
+    color: #fffefb;
+  }
+  .payment-outcome option::checkmark { color: currentColor; }
+}
+/* Search-page dropdowns: same palette and native behaviour as payment outcome. */
+.search-dropdown {
+  color: #28382f;
+  background-color: #fffefb;
+  border-color: #456456;
+  accent-color: #456456;
+}
+.search-dropdown option {
+  color: #28382f;
+  background-color: #f7f5ef;
+}
+@supports (appearance: base-select) {
+  .search-dropdown,
+  .search-dropdown::picker(select) { appearance: base-select; }
+  .search-dropdown::picker(select) {
+    background: #f7f5ef;
+    color: #28382f;
+    border: 1px solid #456456;
+    border-radius: 3px;
+    top: anchor(bottom);
+    bottom: auto;
+    margin-top: 2px;
+    position-area: bottom span-right;
+    position-try-fallbacks: none;
+  }
+  .search-dropdown option {
+    padding: 8px 12px;
+    background: #f7f5ef;
+    color: #28382f;
+  }
+  .search-dropdown option:hover,
+  .search-dropdown:not(:has(option:hover)) option:focus {
+    background: #456456;
+    color: #fffefb;
+  }
+  .search-dropdown option::checkmark { color: currentColor; }
+}
+/* Booking details use a quieter hierarchy than marketing pages. */
+.section.confirmation {
+  padding-top: 44px;
+}
+.confirmation > h1 {
+  font-size: clamp(28px, 3vw, 40px);
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+.confirmation .panel > h2 {
+  font-size: clamp(26px, 2.4vw, 32px);
+  line-height: 1.25;
+}
+@media print {
+  .section.confirmation { padding-top: 20px; }
+  .confirmation > h1 { font-size: 30px; }
+}
+
+/* Keep operational headings compact without changing statistic sizes. */
+.section.admin { padding-top: 40px; }
+.admin > h1 {
+  font-size: 36px;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+.admin .admin-activity-heading {
+  font-size: 26px;
+  line-height: 1.3;
+  margin-top: 0;
+}
+@media (max-width: 650px) {
+  .section.admin { padding-top: 28px; }
+  .admin > h1 { font-size: 28px; margin-bottom: 20px; }
+  .admin .admin-activity-heading { font-size: 22px; }
+}
+
+/* Dashboard activity meters retain their native values and semantics. */
+.admin .status-bars meter {
+  appearance: none;
+  background: #e1e7df;
+  border: 0;
+  border-radius: 3px;
+  height: 10px;
+  overflow: hidden;
+}
+.admin .status-bars meter::-webkit-meter-inner-element { display: block; }
+.admin .status-bars meter::-webkit-meter-bar {
+  background: #e1e7df;
+  border: 0;
+  border-radius: 3px;
+  box-shadow: none;
+  height: 10px;
+}
+.admin .status-bars meter::-webkit-meter-optimum-value,
+.admin .status-bars meter::-webkit-meter-suboptimum-value,
+.admin .status-bars meter::-webkit-meter-even-less-good-value {
+  background: #456456;
+  border-radius: 3px;
+  box-shadow: none;
+}
+.admin .status-bars meter::-moz-meter-bar {
+  background: #456456;
+  border-radius: 3px;
+}
+
+.admin .status-bars > .row {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) minmax(0, 2fr) minmax(28px, 1fr);
+  align-items: center;
+  gap: 20px;
+}
+.admin .status-bars > .row > strong { text-align: right; }
+.admin .status-bars meter {
+  width: 100%;
+  max-width: none;
+  display: block;
+}
+.admin .status-bars meter::-webkit-meter-inner-element {
+  width: 100%;
+  height: 10px;
+}
+.admin .status-bars meter::-webkit-meter-optimum-value,
+.admin .status-bars meter::-webkit-meter-suboptimum-value,
+.admin .status-bars meter::-webkit-meter-even-less-good-value {
+  height: 100%;
+}
+@media (max-width: 650px) {
+  .admin .status-bars > .row {
+    grid-template-columns: 90px minmax(0, 1fr) 24px;
+    gap: 12px;
+  }
+}
+
+/* Remove the native meter's inset spacing around its value. */
+.admin .status-bars meter::-webkit-meter-bar {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  height: 10px;
+}
+.admin .status-bars meter::-webkit-meter-optimum-value,
+.admin .status-bars meter::-webkit-meter-suboptimum-value,
+.admin .status-bars meter::-webkit-meter-even-less-good-value {
+  box-sizing: border-box;
+  display: block;
+  height: 10px;
+  min-height: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.admin .status-bars .activity-track {
+  display: block;
+  width: 100%;
+  height: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: #e1e7df;
+  overflow: hidden;
+}
+.admin .status-bars .activity-fill {
+  display: block;
+  height: 100%;
+  margin: 0;
+  background: #456456;
 }
