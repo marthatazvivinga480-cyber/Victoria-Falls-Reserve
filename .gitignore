@@ -7,8 +7,6 @@ coverage/
 test-results/
 playwright-report/
 
-# Keep the README local until it is ready to publish.
-/README.md
 .env.*
 !.env.example
 *.pem
