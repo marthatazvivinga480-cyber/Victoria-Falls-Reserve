@@ -18,7 +18,7 @@ export function BookingList() {
     <section className="section">
       <p className="eyebrow">YOUR RESERVE JOURNEY</p>
       <div className="section-heading">
-        <h1>Your stays.</h1>
+        <h1 className="booking-list-title">Your stays.</h1>
         <Link to="/hotels">Find another stay ↗</Link>
       </div>
       <div className="tabs" role="tablist" aria-label="Booking category">

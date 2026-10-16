@@ -137,7 +137,7 @@ export function Home() {
       <div className="search-shell">
         <SearchForm />
       </div>
-      <section className="section intro">
+      <section className="section intro home-intro">
         <p className="eyebrow">STAYS FOR DIFFERENT PLANS</p>
         <h2>
           By the river. Near the Falls.
@@ -150,7 +150,7 @@ export function Home() {
           landscape do the rest.
         </p>
       </section>
-      <section className="section">
+      <section className="section home-collection">
         <div className="section-heading">
           <div>
             <p className="eyebrow">EXPLORE THE HOTELS</p>
@@ -183,7 +183,7 @@ export function Home() {
           </Link>
         </div>
       </section>
-      <section className="section promise-grid">
+      <section className="section promise-grid home-promises">
         {[
           [
             '01',
@@ -393,6 +393,7 @@ export function HotelDetails() {
             <Link to={`/hotels/${id}?${allRoomsQuery}`}>Show all room prices</Link>
           </Notice>
         )}
+        {(!checkIn || !checkOut) && <p role="status" className="room-date-hint">Choose your check-in and check-out dates to reserve a room.</p>}
         <div className="room-list">
           {rooms.map((room) => (
             <article className="room-card" key={room._id}>

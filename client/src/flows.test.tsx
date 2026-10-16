@@ -144,7 +144,7 @@ describe('Major frontend flows', () => {
         </Routes>
       </MemoryRouter>,
     );
-    await screen.findByText('Your stay, at a glance.');
+    await screen.findByText('Your booking details.');
     await user.click(screen.getByRole('button', { name: 'Cancel booking' }));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Confirm cancellation' }));

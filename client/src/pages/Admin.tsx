@@ -154,7 +154,7 @@ function HotelManager() {
   return (
     <>
       <div className="section-heading">
-        <h2>Properties</h2>
+        <h2 className="admin-section-title">Properties</h2>
         <button onClick={() => setEditing(null)}>Add hotel</button>
       </div>
       <Feedback {...mutation} />
@@ -291,7 +291,7 @@ function RoomManager() {
   return (
     <>
       <div className="section-heading">
-        <h2>Rooms & inventory</h2>
+        <h2 className="admin-section-title">Rooms & inventory</h2>
         <button onClick={() => setEditing(null)}>Add room</button>
       </div>
       <Feedback {...mutation} />
@@ -307,7 +307,7 @@ function RoomManager() {
           <label>
             Hotel
             <select
-              name="hotel"
+              className="search-dropdown" name="hotel"
               defaultValue={typeof editing?.hotel === 'object' ? editing.hotel._id : editing?.hotel}
             >
               {hotels.data?.map((h) => (
@@ -432,11 +432,11 @@ function BookingManager() {
   const mutation = useMutation(resource.reload);
   return (
     <>
-      <h2>Reservations</h2>
+      <h2 className="admin-section-title">Reservations</h2>
       <Feedback {...mutation} />
       <ResourceState {...resource} retry={resource.reload} />
       <div className="table-wrap">
-        <table>
+        <table className="admin-bookings-table">
           <thead>
             <tr>
               <th>Guest / Property</th>
@@ -449,22 +449,22 @@ function BookingManager() {
           <tbody>
             {resource.data?.map((b) => (
               <tr key={b._id}>
-                <td>
+                <td data-label="Guest / Property">
                   {b.user?.name}
                   <small>
                     {b.hotel?.name} · {b.room?.name}
                   </small>
                 </td>
-                <td>
+                <td data-label="Dates">
                   {b.checkIn}
                   <small>{b.checkOut}</small>
                 </td>
-                <td>
-                  {b.status}
+                <td data-label="Status">
+                  {b.status.replaceAll('_', ' ')}
                   <small>{b.paymentStatus}</small>
                 </td>
-                <td>{money(b.total)}</td>
-                <td>
+                <td data-label="Total">{money(b.total)}</td>
+                <td data-label="Manage">
                   <div className="actions">
                     <Link to={`/bookings/${b._id}`}>Details</Link>
                     {b.status === 'confirmed' && (
@@ -545,7 +545,7 @@ function Customers() {
   const [q, setQ] = useState('');
   return (
     <>
-      <h2>Customers</h2>
+      <h2 className="admin-section-title">Customers</h2>
       <label className="filter">
         Search customers
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name or email" />
@@ -582,7 +582,7 @@ function Reviews() {
   const mutation = useMutation(resource.reload);
   return (
     <>
-      <h2>Guest reviews</h2>
+      <h2 className="admin-section-title">Guest reviews</h2>
       <Feedback {...mutation} />
       <ResourceState {...resource} retry={resource.reload} />
       <div className="review-grid">
@@ -614,7 +614,7 @@ function Payments() {
   const resource = useResource<Payment[]>('/admin/payments');
   return (
     <>
-      <h2>Simulated payment ledger</h2>
+      <h2 className="admin-section-title">Simulated payment ledger</h2>
       <Notice>Demo transactions only. No card information is stored.</Notice>
       <ResourceState {...resource} retry={resource.reload} />
       <div className="table-wrap">
