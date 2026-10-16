@@ -335,10 +335,10 @@ export function BookingDetails() {
           <h2>Share your experience.</h2>
           <label>
             Rating
-            <select name="rating">
+            <select className="search-dropdown" name="rating">
               {[5, 4, 3, 2, 1].map((n) => (
                 <option key={n} value={n}>
-                  {n} stars
+                  {n} {n === 1 ? 'star' : 'stars'}
                 </option>
               ))}
             </select>
