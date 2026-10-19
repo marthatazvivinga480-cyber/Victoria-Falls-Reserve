@@ -171,8 +171,9 @@ strong {
   padding: 0 5%;
   border-bottom: 1px solid #e1e4dd;
   background: #f7f5ef;
-  position: relative;
-  z-index: 2;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 .brand {
   display: flex;
